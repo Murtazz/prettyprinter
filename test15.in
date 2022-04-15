@@ -1,0 +1,8 @@
+Int main ( )     {
+                       ifstream file{"suite.txt"};
+// Declaring and initializing an ifstream opens the file
+                                                    string s ;
+  while (file >> s)              {
+    cout << s << endl;
+                  }
+                         }

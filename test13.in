@@ -1,0 +1,4 @@
+int f ( int x ) { // This is my function
+                        int y = x ; y = y + 1 ;
+ y = x + y ;    y = y * 2 ;
+y *= 5 ; y += 2 ; y += 2 ; y += 4 ;  return y ; } // This is the END of my function

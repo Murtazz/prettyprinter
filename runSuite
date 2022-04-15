@@ -1,0 +1,71 @@
+#!/bin/bash
+
+usage() {
+  echo "Usage: ${0} listofargfiles programToTest sampleProgram" # User message to inform how to use the bash script
+}
+
+error() {
+    echo "Test failed: ${1}"
+    echo "Args:"
+    if [ ! ${2} = "0" ]; then  # .arg file exists?
+      cat ${2}   # if it does print arguments
+    fi
+    echo "Input:"
+    if [ ! ${3} = "0" ]; then    # .in file exists?
+      cat ${3}   # if it does print inputs
+    fi
+    echo "Expected:"
+    cat ${4}     # print expected output
+    echo "Actual:"
+    cat ${5}     # print actual output
+}
+
+if [ $# -ne 3 ]; then # checks if the right arguments are in used
+  usage
+  exit 1
+fi
+
+for a in $(cat ${1}) ; do
+  temp=$(mktemp /tmp/test.XXXXXXXX)  # programToTest (Actual)
+  temp2=$(mktemp /tmp/test2.XXXXXXXX) # sampleProgram (Expected)
+  filein="${a}.in"
+  file="${a}.args"    # forge the .args file
+  if [ -e ${filein} ]; then
+    if [ -e ${file} ]; then  # Checks if the .arg file exists
+      if [ ! -r ${file} ]; then  # Checks if the .arg file is readable 
+        echo "${file} is not readable"  # Echo not readable
+        exit 1
+      fi
+      # .in and .args files exists
+      ${2} $(cat ${file}) < ${filein} > ${temp}
+      ${3} $(cat ${file}) < ${filein} > ${temp2}
+      if ! diff -q ${temp2} ${temp} > /dev/null ; then    # if outputs are different
+        error ${a} ${file} ${filein} ${temp2} ${temp} # error message if different outputs
+      fi
+    else
+      # only the .in files exists
+      ${2} < ${filein} > ${temp}
+      ${3} < ${filein} > ${temp2}
+      if ! diff -q ${temp2} ${temp} > /dev/null ; then # if outputs are different
+        error ${a} 0 ${filein} ${temp2} ${temp} # error message if different outputs
+      fi
+    fi
+  elif [ -e ${file} ]; then
+    # only the .args file exists
+    ${2} $(cat ${file}) > ${temp}
+    ${3} $(cat ${file}) > ${temp2}
+    if ! diff -q ${temp2} ${temp} > /dev/null ; then # if outputs are different
+      error ${a} ${file} 0 ${temp2} ${temp} # error message if different outputs
+    fi
+  else
+    # no .in or .args exist
+    ${2} > ${temp}
+    ${3} > ${temp2}
+    if ! diff -q ${temp2} ${temp} > /dev/null ; then # if outputs are different
+      error ${a} 0 0 ${temp2} ${temp}  # error message if different outputs
+    fi
+  fi
+  # delete temps
+  rm $temp
+  rm $temp2
+done

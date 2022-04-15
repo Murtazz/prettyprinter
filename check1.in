@@ -1,0 +1,8 @@
+void inc ( const int &e ) {    // This function does not do anything.
+        return e+1 ; } // end of program
+ 
+// void inc ( 43 ) would print 44 
+
+int main ( ) { 
+  cout << inc ( 5 ) << endl ; // prints 6
+}

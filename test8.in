@@ -1,0 +1,3 @@
+int main ( ) { char s[256] ; FILE *file = fopen( "suite.txt", "r" ) ; while ( true ) { fscanf( file, "%255s", s ) ;
+    // d
+    if ( feof( file ) ) break ; printf( "%s\n", s ) ; } fclose( file ) ; }
