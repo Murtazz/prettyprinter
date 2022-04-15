@@ -1,0 +1,21 @@
+Sample input:
+
+int f ( int x ) { // This is my function
+int y = x ; y = y + 1 ; return y ; } // This is the END of my function
+int main () { int n = 0 ; while ( n < 10 ) { n = f ( n ) ; } }
+
+Corresponding output:
+
+int f ( int x ) {
+    // This is my function
+    int y = x ;
+    y = y + 1 ;
+    return y ;
+}
+// This is the END of my function
+int main () {
+    int n = 0 ;
+    while ( n < 10 ) {
+        n = f ( n ) ;
+    }
+}
